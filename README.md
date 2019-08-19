@@ -21,8 +21,11 @@ This program lets you sort out the schedule for one night based on the preferenc
 ## Points
 
 A point system needs to be in place.
+
 In this version, points are in multiples of 5.
+
 In order to win points, there are 2 ways. Either the program will give you points based on the shift you were working (19-20 isn't the same as 23-24), or by group acknowledgment (it is decided by supermajority(75%) that someone should be given more points for working more than they needed to).
+
 In order to lose points, there are 3 ways. Either by group acknowledgment (it is decided by supermajority(75%) that someone should be taken points for working less than they needed to), by refusing to work on their given schedule for umknown or invalid reasons, or by "normalization" (if everyone has more than 15 points, for example, we can subtract 15 points to everyone)
 
 ## Files
@@ -72,11 +75,13 @@ Class that holds the information about a person. (name, availability, points, ta
 ##### works_at_shift(self, shift)
 
 Checks if the person has the given shift.
+
 Returns True or False.
 
 ##### works_at_shift_and_task(self, shift, task)
 
 Checks if the person has the given task at the given shift.
+
 Returns True or False
 
 ##### stringWorking(self)
@@ -129,16 +134,19 @@ Receives a list of people and writes each person's schedule to a schedule.txt fi
 ### generate_tasks_prefered(num, max)
 
 Receives a number of random sequences to be generated (num), and a maximum number. It will generate "num" number of sequences of "max" different numbers, from 0 to "max" - 1. For example, if I choose (1,3), 0-2-1 is a valid output.
+
 It is used just for testing purposes
 
 ### choose_person_shifts_prefered(person, people_needed, avoid_flag, second_schedule_flag)
 
 For a certain person with preference set to 1, checks their preferences and the shifts available (people_needed). If the "avoid_flag" is set to True, the program will avoid the tasks and shifts that the person choose to avoid. If the "second_schedule_flag" is set to True, the program will try to make a schedule next to the shift the person already has.
+
 It will be evaluating the tasks prefered for the shifts prefered.
 
 ### choose_person_tasks_prefered(person, people_needed, avoid_flag, second_schedule_flag)
 
 Same as choose_person_shifts_prefered but instead of the person have the preference set to 1, it must be set to 0.
+
 It will be evaluating the shifts prefered for the tasks prefered.
 
 
