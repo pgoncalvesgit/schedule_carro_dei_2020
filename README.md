@@ -1,11 +1,29 @@
 # Schedule Carro Dei 2020 v1.0.0
 
 ## Index
-- [Introdution](#Introdution)
-- [Limitations and Bugs](#Limitations_and_Bugs)
+- [Introdution](#Introduction)
+- [Limitations and Bugs](#Limitations-and-Bugs)
 - [Points](#Points)
 - [Files](#Files)
-- [Functions and Classes](#Functions_and_Classes)
+  * [Program Files](#Program-Files)
+  * [Input Files](#Input-Files)
+  * [Output Files](#Output-Files)
+- [Functions and Classes](#Functions-and-Classes)
+  * [Person](#Person)
+    - [works_at_shift(self, shift)](#works-at-shift(self,-shift))
+    - [works_at_shift_and_task(self, shift, task)](#works-at-shift-and-task(self, shift, task))
+    - [string_working(self)](#string-working(self))
+    - [string_test(self)](#string-test(self))
+  * [Hour_Row](#Hour-Row)
+  * [read_persons()](#read-persons())
+  * [read_persons_points(persons)](#read-persons-points(persons))
+  * [read_tasks_people()](#read-tasks-people())
+  * [read_points()](#read-points())
+  * [change_persons_points()](#change-persons-points())
+  * [write_points(persons)](#write-points(persons))
+  * [write_schedule_csv(persons)](#write-schedule-csv(persons))
+  * [write_schedule_txt(persons)](#write-schedule-txt(persons))
+  * [generate_tasks_prefered(num, max)](#generate-tasks-prefered(num,-max))
 
 ## Introduction
 
@@ -88,7 +106,7 @@ Returns True or False
 
 Outputs a string for debugging with a custom message about the person's schedule.
 
-##### stringTest(self):
+##### stringTest(self)
 
 Outputs a string for debugging with a custom message about the person.
 
