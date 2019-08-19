@@ -2,16 +2,16 @@
 
 ## Index
 - [Introdution](#Introdution)
-- [Limitations/Bugs](#Limitations/Bugs)
+- [Limitations and Bugs](#Limitations_and_Bugs)
 - [Points](#Points)
 - [Files](#Files)
-- [Functions](#Functions_and_Classes)
+- [Functions and Classes](#Functions_and_Classes)
 
 ## Introduction
 
 This program lets you sort out the schedule for one night based on the preferences and dislikes of some taks or shifts.
 
-## Limitations/Bugs
+## Limitations and Bugs
 
 - Everyone works a maximum of 2 hours
 - The schedule outputted might need some tweaking
