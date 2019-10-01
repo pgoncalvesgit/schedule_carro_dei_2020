@@ -94,7 +94,7 @@ class Hour_Row:
         
 #read every person and create a list with everyone
 def read_persons():
-    file = open('input/people.csv', 'r')
+    file = open('input/people_from_form.csv', 'r')
     csv_dic = csv.DictReader(file)
     
     persons = list()
@@ -360,89 +360,96 @@ def choose_person_tasks_prefered(person, people_needed, avoid_flag, second_sched
 
 
 
-#reads the persons and hours, sorts and reads the tasks
-persons = read_persons()
-hours_fieldnames = read_persons_hours(persons)
-#https://wiki.python.org/moin/HowTo/Sorting#Sortingbykeys
-persons = sorted(persons, key=lambda person: person.hours, reverse=True)
-(people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour, tasks_fieldnames) = read_tasks_people()
-
-
-
-
-
-
-
-
-
-#data analysis
-num_overflow = 0
-
-if(len(persons) < num_persons_needed_1_hour + num_persons_needed_2_hours):
-    print("CAREFULL!! SOME SCHEDULES ARE EMPTY")
-    print("MORE SPACES THAN PEOPLE ARE AVAILABLE")
-else:
-    num_overflow = len(persons) - (num_persons_needed_1_hour + num_persons_needed_2_hours)
-    print(str(num_overflow) + " will not be working")
+if __name__ == "__main__":
     
-    if(num_persons_needed_1_hour > 0):
-        print(str(num_persons_needed_1_hour) + " will only work 1 hour")
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Adds who will be working 1 hour
-for i in range(num_overflow, num_overflow + num_persons_needed_1_hour):
-    if(persons[i].preference == 1):
-        if (choose_person_shifts_prefered(persons[i], people_needed, True, False) == 0):
-            choose_person_shifts_prefered(persons[i], people_needed, False, False)
+    #CHANGE
+    print("Number of shifts")
+    num_shifts = int(input())
+    print()
+    
+    #reads the persons and hours, sorts and reads the tasks
+    persons = read_persons()
+    hours_fieldnames = read_persons_hours(persons)
+    #https://wiki.python.org/moin/HowTo/Sorting#Sortingbykeys
+    persons = sorted(persons, key=lambda person: person.hours, reverse=True)
+    (people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour, tasks_fieldnames) = read_tasks_people()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #data analysis
+    num_overflow = 0
+    
+    if(len(persons) < num_persons_needed_1_hour + num_persons_needed_2_hours):
+        print("CAREFULL!! SOME SCHEDULES ARE EMPTY")
+        print("MORE SPACES THAN PEOPLE ARE AVAILABLE")
     else:
-        if (choose_person_tasks_prefered(persons[i], people_needed, True, False) == 0):
-            choose_person_tasks_prefered(persons[i], people_needed, False, False)
-
-#Adds who will be working 2 hours
-for i in range(num_overflow + num_persons_needed_1_hour, len(persons)):
-    for j in range(2):
+        num_overflow = len(persons) - (num_persons_needed_1_hour + num_persons_needed_2_hours)
+        print(str(num_overflow) + " will not be working")
+        
+        if(num_persons_needed_1_hour > 0):
+            print(str(num_persons_needed_1_hour) + " will only work 1 hour")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #Adds who will be working 1 hour
+    for i in range(num_overflow, num_overflow + num_persons_needed_1_hour):
         if(persons[i].preference == 1):
-            if (choose_person_shifts_prefered(persons[i], people_needed, True, j == 1) == 0):
-                choose_person_shifts_prefered(persons[i], people_needed, False, j == 1)
+            if (choose_person_shifts_prefered(persons[i], people_needed, True, False) == 0):
+                choose_person_shifts_prefered(persons[i], people_needed, False, False)
         else:
-            if (choose_person_tasks_prefered(persons[i], people_needed, True, j == 1) == 0):
-                choose_person_tasks_prefered(persons[i], people_needed, False, j == 1)
-
-#prints the string for debugging
-for i in range(len(persons)):
-    print(persons[i].string_working())
-
-
-
-
-
-
-
-
-
-
-
-
+            if (choose_person_tasks_prefered(persons[i], people_needed, True, False) == 0):
+                choose_person_tasks_prefered(persons[i], people_needed, False, False)
+    
+    #Adds who will be working 2 hours
+    for i in range(num_overflow + num_persons_needed_1_hour, len(persons)):
+        for j in range(2):
+            if(persons[i].preference == 1):
+                if (choose_person_shifts_prefered(persons[i], people_needed, True, j == 1) == 0):
+                    choose_person_shifts_prefered(persons[i], people_needed, False, j == 1)
+            else:
+                if (choose_person_tasks_prefered(persons[i], people_needed, True, j == 1) == 0):
+                    choose_person_tasks_prefered(persons[i], people_needed, False, j == 1)
+    
+    #prints the string for debugging
+    for i in range(len(persons)):
+        print(persons[i].string_working())
 
 
 
-num_shifts = 8
 
 
-#write in the files
-write_hours(persons, hours_fieldnames, tasks_fieldnames, num_shifts)
-write_schedule_csv(persons, tasks_fieldnames, num_shifts)
+
+
+
+
+
+
+
+
+    
+    #write in the files
+    write_hours(persons, hours_fieldnames, tasks_fieldnames, num_shifts)
+    write_schedule_csv(persons, tasks_fieldnames, num_shifts)
+
+
+
+
 
 
 

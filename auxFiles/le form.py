@@ -23,18 +23,28 @@ def le_form(num_tasks, num_shifts):
             new_row.append(0)
         
         #order of tasks
+        temp = [None] * num_tasks
+        
         for i in range(num_tasks):
+            temp[num_tasks - int(row[fieldnames[2 + 1 + i]]) - 1] = str(i)
+            
+        for i in range(len(temp)):
             if(i > 0):
                 aux_text += "-"
-            aux_text += row[fieldnames[2 + 1 + i]]
+            aux_text += temp[i]
         new_row.append(aux_text)
         aux_text = ""
         
         #order of shifts
+        temp = [None] * num_shifts
+        
         for i in range(num_shifts):
+            temp[num_shifts - int(row[fieldnames[2 + num_tasks + 1 + i]]) - 1] = str(i)
+            
+        for i in range(len(temp)):
             if(i > 0):
                 aux_text += "-"
-            aux_text += row[fieldnames[2 + num_tasks + 1 + i]]
+            aux_text += temp[i]
         new_row.append(aux_text)
         aux_text = ""
         
@@ -73,6 +83,8 @@ def le_form(num_tasks, num_shifts):
     
     file = open('../input/people_from_form.csv', 'w')
     
+    file.write("name,available,tasks_prefered,shifts_prefered,preference,tasks_to_avoid,shifts_to_avoid\n")
+    
     for row in new_rows:
         for i in range(len(row)):
             cell = row[i]
@@ -85,7 +97,13 @@ def le_form(num_tasks, num_shifts):
 
 
     
-le_form(3,8)
+if __name__ == "__main__":  
+    #CHANGE
+    print("Number of shifts?")
+    num_shifts = int(input())
+    print("Number of tasks?")
+    num_tasks = int(input())
+    le_form(num_tasks, num_shifts)
         
         
         
