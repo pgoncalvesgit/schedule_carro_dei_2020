@@ -13,8 +13,8 @@ class Person:
         #   available == 1 -> available
         self.available = (row["available"] == str(1))
         
-        #initializes the points to 0
-        self.points = 0
+        #initializes the hours to 0
+        self.hours = 0
         
         #tasks_prefered -> order of task preference (index)
         self.tasks_prefered = row["tasks_prefered"].split("-")
@@ -67,13 +67,15 @@ class Person:
     def string_test(self):
         return self.name + " is working: " + str(self.schedule[0][0]) + "-" + str(self.schedule[0][1])\
                + " and " + str(self.schedule[1][0]) + "-" + str(self.schedule[1][1])\
-               + " and has " + str(self.points) + " points"
+               + " and has " + str(self.hours) + " hours"
     
 #aux class
 class Hour_Row:
-    def __init__(self, row):
-        self.row = [int(row["finos"]), int(row["senhas"]), int(row["shots"]), int(row["febras"])]
-        
+    def __init__(self, row, fieldnames):
+        self.row = list()
+        for i in fieldnames:
+            self.row.append(int(row[i]))
+
    
     
     
@@ -92,7 +94,7 @@ class Hour_Row:
         
 #read every person and create a list with everyone
 def read_persons():
-    file = open('people.csv', 'r')
+    file = open('input/people.csv', 'r')
     csv_dic = csv.DictReader(file)
     
     persons = list()
@@ -105,28 +107,34 @@ def read_persons():
     file.close()
     return persons
 
-#update the list with everyone with the current points
-def read_persons_points(persons):
-    file = open('points.csv', 'r')
+#update the list with everyone with the current hours
+def read_persons_hours(persons):
+    file = open('input/hours.csv', 'r')
     csv_dic = csv.DictReader(file)
+    
+    fieldnames = csv_dic.fieldnames
     
     for row in csv_dic:
         for i in range(len(persons)):
-            if(persons[i].name == row["name"]):
-                persons[i].points = int(row["points"])
+            if(persons[i].name == row[fieldnames[0]]):
+                persons[i].hours = int(row[fieldnames[1]])
                 
     file.close()
+    
+    return fieldnames
 
 #reads the number of people for the tasks
 def read_tasks_people():
-    file = open('number_people_tasks.csv', 'r')
+    file = open('input/number_people_tasks.csv', 'r')
     csv_dic = csv.DictReader(file)
     
     #creates the list with the number or people needed for each hour
     people_needed = list()
+    fieldnames = csv_dic.fieldnames
+    
     for row in csv_dic:
         new_row = list()
-        hour_row = Hour_Row(row)
+        hour_row = Hour_Row(row, fieldnames)
         for j in range(len(hour_row.row)):
             new_row.append(int(hour_row.row[j]))
         people_needed.append(new_row)
@@ -136,56 +144,40 @@ def read_tasks_people():
     num_persons_needed_1_hour = 0
     num_persons_needed_2_hours = 0
     for i in range(round(len(people_needed)/2)):
-        for j in range(4):
+        for j in range(len(fieldnames)):
             num_persons_needed_2_hours += people_needed[i*2][j]
             num_persons_needed_1_hour += abs(people_needed[i*2][j] - people_needed[i*2 + 1][j])
     file.close()
     
-    return people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour
+    return people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour, fieldnames
 
-#reads the points multiplier for each task for each shift
-def read_points():
-    file = open('tasks_points_multiplier.csv', 'r')
-    csv_dic = csv.DictReader(file)
-    
-    points_multiplier = list()
-    
-    for row in csv_dic:
-        new_row = list()
-        hour_row = Hour_Row(row)
-        for j in range(len(hour_row.row)):
-            new_row.append(int(hour_row.row[j]))
-        points_multiplier.append(new_row)
-        
-    file.close()
-    return points_multiplier
-
-#changes current persons points based on the points_multiplier list
-def change_persons_points(persons):
-    points_multiplier = read_points()
-    for i in range(8):
-        for j in range(4):
+#changes current persons hours based on the hours_multiplier list
+def change_persons_hours(persons, num_shifts, fieldnames):
+    for i in range(num_shifts):
+        for j in range(len(fieldnames)):
             for k in range(len(persons)):
                 if(persons[k].works_at_shift_and_task(i,j)):
-                    persons[k].points += points_multiplier[i][j]*5
+                    persons[k].hours += 1
                     
-#writes the points to a new file
-def write_points(persons):
-    file = open('new_points.csv', 'w')
-    file.write("names,points\n")
+#writes the hours to a new file
+def write_hours(persons, hours_fieldnames, task_fieldnames, num_shifts):
+    file = open('output/new_hours.csv', 'w')
+    file.write(hours_fieldnames[0] + "," + hours_fieldnames[1] + "\n")
     
-    change_persons_points(persons)
+    change_persons_hours(persons, num_shifts, task_fieldnames)
     
     for i in range(len(persons)):
-        file.write(persons[i].name + "," + str(persons[i].points) + "\n")
+        file.write(persons[i].name + "," + str(persons[i].hours) + "\n")
     
     file.close()
 
 #writes the schedule to a new file
-def write_schedule_csv(persons):
-    file = open('schedule.csv', 'w')
-    file.write(",Finos,Senhas,Shots,Febras\n")
-    for i in range(8):
+def write_schedule_csv(persons, fieldnames, num_shifts):
+    file = open('output/schedule.csv', 'w')
+    for i in fieldnames:
+        file.write("," + i)
+    file.write("\n")
+    for i in range(num_shifts):
         #beautify
         if(19 + i <= 24):
             file.write(str(19 + i))
@@ -214,10 +206,10 @@ def write_schedule_csv(persons):
     file.close()
     
 #same as the top one, but for txt
-def write_schedule_txt(persons):
+def write_schedule_txt(persons, fieldnames, num_shifts):
     file = open('teste.csv', 'w')
-    file.write("\tFinos\tSenhas\tShots\tFebras\n")
-    for i in range(8):
+    file.write("\t" + fieldnames[0] + "\t" + fieldnames[1] + "\t" + fieldnames[2] + "\t" + fieldnames[3] + "\n")
+    for i in range(num_shifts):
         if(19 + i <= 24):
             file.write(str(19 + i))
         else:
@@ -368,12 +360,12 @@ def choose_person_tasks_prefered(person, people_needed, avoid_flag, second_sched
 
 
 
-#reads the persons and points, sorts and reads the tasks
+#reads the persons and hours, sorts and reads the tasks
 persons = read_persons()
-read_persons_points(persons)
+hours_fieldnames = read_persons_hours(persons)
 #https://wiki.python.org/moin/HowTo/Sorting#Sortingbykeys
-persons = sorted(persons, key=lambda person: person.points, reverse=True)
-(people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour) = read_tasks_people()
+persons = sorted(persons, key=lambda person: person.hours, reverse=True)
+(people_needed, num_persons_needed_2_hours, num_persons_needed_1_hour, tasks_fieldnames) = read_tasks_people()
 
 
 
@@ -445,12 +437,12 @@ for i in range(len(persons)):
 
 
 
-
+num_shifts = 8
 
 
 #write in the files
-write_points(persons)
-write_schedule_csv(persons)
+write_hours(persons, hours_fieldnames, tasks_fieldnames, num_shifts)
+write_schedule_csv(persons, tasks_fieldnames, num_shifts)
 
 
 

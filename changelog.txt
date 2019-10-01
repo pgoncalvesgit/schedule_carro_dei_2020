@@ -1,0 +1,22 @@
+version 1.1.0
+
+- Changed from a point system to an hour system
+
+Bugs/problems fixed
+
+- Works with any number of shifts and tasks
+
+Bugs/problems added
+
+- None has yet been discovered
+
+
+version 1.0.0
+
+- Added the basic schedule app
+
+Known bugs/problems
+
+- Can only work if you have 8 shifts and 4 tasks.
+- If the data isn't syncronized the program crashes and may leave some files open which only disapears from the ram once you close the IDE/command line
+- Doesn't work if the number of people is less than the number of slots
