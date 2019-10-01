@@ -67,10 +67,24 @@ def le_form(num_tasks, num_shifts):
         
         new_rows.append(new_row)
         
-    print("teste")
-    print(new_rows)
+    file.close()
     
-        
+    
+    
+    file = open('../input/people_from_form.csv', 'w')
+    
+    for row in new_rows:
+        for i in range(len(row)):
+            cell = row[i]
+            file.write(str(cell))
+            if(i < len(row) - 1):
+                file.write(",")
+        file.write("\n")
+    
+    file.close()
+
+
+    
 le_form(3,8)
         
         

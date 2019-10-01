@@ -1,6 +1,14 @@
+version 1.1.2
+
+- Fixed a bug that the program that reads the form isn't writing to a file
+
 version 1.1.1
 
 - Added some aux files to read from the form and write the input for the files
+
+Known Bug:
+
+- the program that reads the form isn't writing to a file
 
 version 1.1.0
 
